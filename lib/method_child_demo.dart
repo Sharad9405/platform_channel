@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:plaform_channel/counter.dart';
 
 class MethodChannelDemo extends StatefulWidget {
   const MethodChannelDemo({Key key}) : super(key: key);
@@ -30,14 +32,28 @@ class _MethodChannelDemoState extends State<MethodChannelDemo> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton.icon(
-                  onPressed: () {
-                    try {} catch (error) {}
+                  onPressed: () async {
+                    try {
+                      Counter.increment(counterValue: count).then((value) {
+                        setState(() => count = value);
+                      });
+                    } catch (error) {
+                      showErrorMessage(
+                          context, (error as PlatformException).message);
+                    }
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Increment')),
               ElevatedButton.icon(
                 onPressed: () async {
-                  try {} catch (error) {}
+                  try {
+                    Counter.decrement(counterValue: count).then((value) {
+                      setState(() => count = value);
+                    });
+                  } catch (error) {
+                    showErrorMessage(
+                        context, (error as PlatformException).message);
+                  }
                 },
                 icon: const Icon(Icons.remove),
                 label: const Text('Decrement'),
@@ -47,5 +63,10 @@ class _MethodChannelDemoState extends State<MethodChannelDemo> {
         ],
       ),
     );
+  }
+
+  void showErrorMessage(context, errorMessage) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(errorMessage)));
   }
 }
