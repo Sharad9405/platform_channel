@@ -1,6 +1,8 @@
 package com.platform_channel.plaform_channel
 
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.*
 
 class MainActivity: FlutterActivity() {
 
@@ -17,16 +19,15 @@ class MainActivity: FlutterActivity() {
                 .setMethodCallHandler { call, result ->
                     val count: Int? = call.argument<Int>("count")
 
-                    if(count == null){
+                    if (count == null) {
                         result.error("INVALID ARGUMENT", "Value of count cannot be null", null)
-                    }else{
-                        when(call.method){
+                    } else {
+                        when (call.method) {
                             "increment" -> result.success(count + 1)
                             "decrement" -> result.success(count - 1)
                             else -> result.notImplemented()
                         }
                     }
                 }
-
     }
 }
